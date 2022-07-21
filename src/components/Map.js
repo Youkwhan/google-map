@@ -9,12 +9,33 @@ import {
 import Places from "./Places";
 
 export default function Map() {
+	const mapRef = useRef();
+	const center = useMemo(() => ({ lat: 40.7, lng: -74 }), []);
+	const options = useMemo(
+		() => ({
+			mapId: "6e7b880f1521e697",
+			disableDefaultUI: true,
+			clickableIcons: false,
+		}),
+		[]
+	);
+	//optimize rerending with fucntion calls
+	const onLoad = useCallback((map) => (mapRef.current = map), []);
 	return (
 		<div className="container">
 			<div className="controls">
 				<h1>Commute?</h1>
 			</div>
-			Map
+
+			<div className="map">
+				<GoogleMap
+					zoom={10}
+					center={center}
+					mapContainerClassName="map-container"
+					options={options}
+					onLoad={onLoad}
+				></GoogleMap>
+			</div>
 		</div>
 	);
 }
@@ -34,6 +55,20 @@ const closeOptions = {
 	fillOpacity: 0.05,
 	strokeColor: "#8BC34A",
 	fillColor: "#8BC34A",
+};
+const middleOptions = {
+	...defaultOptions,
+	zIndex: 2,
+	fillOpacity: 0.05,
+	strokeColor: "#FBC02D",
+	fillColor: "#FBC02D",
+};
+const farOptions = {
+	...defaultOptions,
+	zIndex: 1,
+	fillOpacity: 0.05,
+	strokeColor: "#FF5252",
+	fillColor: "#FF5252",
 };
 
 const generateStores = (position) => {
