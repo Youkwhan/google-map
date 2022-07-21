@@ -10,7 +10,6 @@ import {
 	ComboboxOption,
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
-import { InfoBox } from "@react-google-maps/api";
 
 export default function Places({ setOffice }) {
 	/* 

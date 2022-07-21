@@ -7,6 +7,7 @@ import {
 	MarkerClusterer,
 } from "@react-google-maps/api";
 import Places from "./places";
+import { toHaveFormValues } from "@testing-library/jest-dom/dist/matchers";
 
 export default function Map() {
 	const [office, setOffice] = useState();
@@ -22,15 +23,22 @@ export default function Map() {
 	);
 	//optimize rerending with fucntion calls
 	const onLoad = useCallback((map) => (mapRef.current = map), []);
+	//Create random buildings around center
+	const buildings = useMemo(() => {
+		if (office) return generateBuildings(office);
+	}, [office]);
+
 	return (
 		<div className="container">
 			<div className="controls">
 				<h1>Near by me</h1>
 				{/* Get the cords from Search Bar and update position/cords and pan map to cords */}
-				<Places setOffice={(position) => {
-					setOffice(position);
-					mapRef.current.panTo(position);
-				}} />
+				<Places
+					setOffice={(position) => {
+						setOffice(position);
+						mapRef.current?.panTo(position);
+					}}
+				/>
 			</div>
 
 			<div className="map">
@@ -40,7 +48,28 @@ export default function Map() {
 					mapContainerClassName="map-container"
 					options={options}
 					onLoad={onLoad}
-				></GoogleMap>
+				>
+					{/* If there is an office then,*/}
+					{office && (
+						<>
+							{/* show the Marker at the coords, office ={lat,lng} */}
+							<Marker
+								position={office}
+								icon="https://icon-library.com/images/nuke-icon-png/nuke-icon-png-14.jpg"
+							/>
+
+							
+							{/* Display the random building markers */}
+							{buildings.map((building) => (
+								<Marker key={building.lat} position={building} />
+							))}
+
+							<Circle center={office} radius={15000} options={closeOptions} />
+							<Circle center={office} radius={30000} options={middleOptions} />
+							<Circle center={office} radius={45000} options={farOptions} />
+						</>
+					)}
+				</GoogleMap>
 			</div>
 		</div>
 	);
@@ -77,14 +106,16 @@ const farOptions = {
 	fillColor: "#FF5252",
 };
 
-const generateStores = (position) => {
-	const stores = [];
-	for (let x = 0; x < 100; x++) {
-		const direction = Math.random() < 0.5 ? -75 : 75;
-		stores.push({
+//generating between a random range of 11-80 buildings 
+const generateBuildings = (position) => {
+	const buildings = [];
+	const numberRange = Math.floor(Math.random() * (80-10+1)) + 10
+	for (let i = 0; i < numberRange; i++) {
+		const direction = Math.random() < 0.5 ? -4 : 4;
+		buildings.push({
 			lat: position.lat + Math.random() / direction,
 			lng: position.lng + Math.random() / direction,
 		});
 	}
-	return stores;
+	return buildings;
 };
