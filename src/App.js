@@ -1,5 +1,5 @@
 import { useLoadScript } from "@react-google-maps/api";
-import Map from './components/map'
+import Map from './components/Map'
 import "./globals.css"
 
 function App() {

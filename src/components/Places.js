@@ -11,7 +11,7 @@ import {
 } from "@reach/combobox";
 import "@reach/combobox/styles.css";
 
-export default function Places({ setOffice }) {
+export default function Places({ setAddress }) {
 	/* 
    ready= is the script ready to be used,
    value = value the user input to the search input box,
@@ -37,7 +37,7 @@ export default function Places({ setOffice }) {
 			const result = await getGeocode({ address: val });
 			const { lat, lng } = await getLatLng(result[0]);
 
-			setOffice({ lat, lng });
+			setAddress({ lat, lng });
 		} catch (err) {
 			console.log(err);
 		}

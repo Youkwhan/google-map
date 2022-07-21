@@ -6,11 +6,12 @@ import {
 	Circle,
 	MarkerClusterer,
 } from "@react-google-maps/api";
-import Places from "./places";
-import { toHaveFormValues } from "@testing-library/jest-dom/dist/matchers";
+import Places from "./Places";
+import Distance from "./Distance";
 
 export default function Map() {
-	const [office, setOffice] = useState();
+	const [address, setAddress] = useState();
+	const [directions, setDirections] = useState();
 	const mapRef = useRef();
 	const center = useMemo(() => ({ lat: 40.7, lng: -74 }), []);
 	const options = useMemo(
@@ -25,8 +26,26 @@ export default function Map() {
 	const onLoad = useCallback((map) => (mapRef.current = map), []);
 	//Create random buildings around center
 	const buildings = useMemo(() => {
-		if (office) return generateBuildings(office);
-	}, [office]);
+		if (address) return generateBuildings(address);
+	}, [address]);
+
+	const fetchDirections = (building) => {
+		if (!address) return;
+
+		const service = new window.google.maps.DirectionsService();
+		service.route(
+			{
+				origin: building,
+				destination: address,
+				travelMode: window.google.maps.TravelMode.DRIVING,
+			},
+			(result, status) => {
+				if (status === "OK" && result) {
+					setDirections(result);
+				}
+			}
+		);
+	};
 
 	return (
 		<div className="container">
@@ -34,11 +53,13 @@ export default function Map() {
 				<h1>Near by me</h1>
 				{/* Get the cords from Search Bar and update position/cords and pan map to cords */}
 				<Places
-					setOffice={(position) => {
-						setOffice(position);
+					setAddress={(position) => {
+						setAddress(position);
 						mapRef.current?.panTo(position);
 					}}
 				/>
+				{!address && <p>Enter the address of your current location</p>}
+				{directions && <Distance leg={directions.routes[0].legs[0]} />}
 			</div>
 
 			<div className="map">
@@ -49,12 +70,25 @@ export default function Map() {
 					options={options}
 					onLoad={onLoad}
 				>
-					{/* If there is an office then,*/}
-					{office && (
+					{directions && (
+						<DirectionsRenderer
+							directions={directions}
+							options={{
+								polylineOptions: {
+									zIndex: 50,
+									strokeColor: "#1976D2",
+									strokeWeight: 5,
+								},
+							}}
+						/>
+					)}
+
+					{/* If there is an address then,*/}
+					{address && (
 						<>
-							{/* show the Marker at the coords, office ={lat,lng} */}
+							{/* show the Marker at the coords, address ={lat,lng} */}
 							<Marker
-								position={office}
+								position={address}
 								//icon="https://icon-library.com/images/nuke-icon-png/nuke-icon-png-14.jpg"
 							/>
 
@@ -66,14 +100,17 @@ export default function Map() {
 											key={building.lat}
 											position={building}
 											clusterer={clusterer}
+											onClick={() => {
+												fetchDirections(building);
+											}}
 										/>
 									))
 								}
 							</MarkerClusterer>
 
-							<Circle center={office} radius={15000} options={closeOptions} />
-							<Circle center={office} radius={30000} options={middleOptions} />
-							<Circle center={office} radius={45000} options={farOptions} />
+							<Circle center={address} radius={15000} options={closeOptions} />
+							<Circle center={address} radius={30000} options={middleOptions} />
+							<Circle center={address} radius={45000} options={farOptions} />
 						</>
 					)}
 				</GoogleMap>
