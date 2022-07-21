@@ -1,6 +1,7 @@
 import React from "react";
 import { useLoadScript } from "@react-google-maps/api";
-import Map from "./components/Map";
+import Map from './components/Map'
+import "./globals.css"
 
 function App() {
 	//LoadScript - Loads the Google Maps JavaScript API script
@@ -10,7 +11,21 @@ function App() {
 	});
 
 	if (!isLoaded) return <div>Loading...</div>;
-	return <div> Map</div>;
+	return (
+		<div>
+			<Map />
+		</div>
+	);
 }
+
+
+const defaultOptions = {
+	strokeOpacity: 0.5,
+	strokeWeight: 2,
+	clickable: false,
+	draggable: false,
+	editable: false,
+	visible: true,
+ };
 
 export default App;
