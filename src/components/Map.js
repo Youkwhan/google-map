@@ -6,9 +6,10 @@ import {
 	Circle,
 	MarkerClusterer,
 } from "@react-google-maps/api";
-import Places from "./Places";
+import Places from "./places";
 
 export default function Map() {
+	const [office, setOffice] = useState();
 	const mapRef = useRef();
 	const center = useMemo(() => ({ lat: 40.7, lng: -74 }), []);
 	const options = useMemo(
@@ -24,7 +25,12 @@ export default function Map() {
 	return (
 		<div className="container">
 			<div className="controls">
-				<h1>Commute?</h1>
+				<h1>Near by me</h1>
+				{/* Get the cords from Search Bar and update position/cords and pan map to cords */}
+				<Places setOffice={(position) => {
+					setOffice(position);
+					mapRef.current.panTo(position);
+				}} />
 			</div>
 
 			<div className="map">
