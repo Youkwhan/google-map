@@ -55,14 +55,21 @@ export default function Map() {
 							{/* show the Marker at the coords, office ={lat,lng} */}
 							<Marker
 								position={office}
-								icon="https://icon-library.com/images/nuke-icon-png/nuke-icon-png-14.jpg"
+								//icon="https://icon-library.com/images/nuke-icon-png/nuke-icon-png-14.jpg"
 							/>
 
-							
 							{/* Display the random building markers */}
-							{buildings.map((building) => (
-								<Marker key={building.lat} position={building} />
-							))}
+							<MarkerClusterer>
+								{(clusterer) =>
+									buildings.map((building) => (
+										<Marker
+											key={building.lat}
+											position={building}
+											clusterer={clusterer}
+										/>
+									))
+								}
+							</MarkerClusterer>
 
 							<Circle center={office} radius={15000} options={closeOptions} />
 							<Circle center={office} radius={30000} options={middleOptions} />
@@ -106,10 +113,10 @@ const farOptions = {
 	fillColor: "#FF5252",
 };
 
-//generating between a random range of 11-80 buildings 
+//generating between a random range of 11-80 buildings
 const generateBuildings = (position) => {
 	const buildings = [];
-	const numberRange = Math.floor(Math.random() * (80-10+1)) + 10
+	const numberRange = Math.floor(Math.random() * (80 - 10 + 1)) + 10;
 	for (let i = 0; i < numberRange; i++) {
 		const direction = Math.random() < 0.5 ? -4 : 4;
 		buildings.push({
