@@ -19,8 +19,7 @@ export default function Places({ setAddress }) {
    suggestions= suggestions themselves {status= If any were loaded, data= the actual suggestions}
    clearSuggestions= clear the rest when user clicks one
    */
-	const {
-		ready,
+	const {	
 		value,
 		setValue,
 		suggestions: { status, data },

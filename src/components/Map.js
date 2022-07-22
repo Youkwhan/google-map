@@ -9,6 +9,10 @@ import {
 import Places from "./Places";
 import Distance from "./Distance";
 
+// import { toast } from "react-toastify";
+// import "react-toastify/dist/ReactTostify.css";
+
+// toast.configure();
 export default function Map() {
 	const [address, setAddress] = useState();
 	const [directions, setDirections] = useState();
@@ -46,6 +50,10 @@ export default function Map() {
 			}
 		);
 	};
+
+	// const notify = (building) => {
+	// 	toast("Basic notification", {position: toast.POSITION.TOP_LEFT, autoClose: 8000});
+	// };
 
 	return (
 		<div className="container">
@@ -90,6 +98,7 @@ export default function Map() {
 							<Marker
 								position={address}
 								//icon="https://icon-library.com/images/nuke-icon-png/nuke-icon-png-14.jpg"
+								icon="https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png"
 							/>
 
 							{/* Display the random building markers */}
@@ -102,6 +111,7 @@ export default function Map() {
 											clusterer={clusterer}
 											onClick={() => {
 												fetchDirections(building);
+												// notify(building);
 											}}
 										/>
 									))
