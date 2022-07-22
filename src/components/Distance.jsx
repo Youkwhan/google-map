@@ -5,7 +5,7 @@ function Distance({ leg }) {
 	if (!leg.distance || !leg.duration) return null;
 
 	return (
-		<div>
+		<div className="highlight">
 			{/* <p>
 				We want to go to{" "}
 				<span className="highlight">{leg.start_address.text}</span>
