@@ -9,8 +9,8 @@ import {
 import Places from "./Places";
 import Distance from "./Distance";
 
-// import { toast } from "react-toastify";
-// import "react-toastify/dist/ReactTostify.css";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 // toast.configure();
 export default function Map() {
@@ -54,6 +54,17 @@ export default function Map() {
 	// const notify = (building) => {
 	// 	toast("Basic notification", {position: toast.POSITION.TOP_LEFT, autoClose: 8000});
 	// };
+	const notify = () => {
+		toast.success("Direction has been Updated", {
+			position: "top-right",
+			autoClose: 5000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+		});
+	};
 
 	return (
 		<div className="container">
@@ -111,12 +122,13 @@ export default function Map() {
 											clusterer={clusterer}
 											onClick={() => {
 												fetchDirections(building);
-												// notify(building);
+												notify();
 											}}
 										/>
 									))
 								}
 							</MarkerClusterer>
+							<ToastContainer theme="dark" />
 
 							<Circle center={address} radius={15000} options={closeOptions} />
 							<Circle center={address} radius={30000} options={middleOptions} />
